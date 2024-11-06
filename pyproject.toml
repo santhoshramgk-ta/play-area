@@ -2,6 +2,13 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "MLE_TRAINING"
+version = "v0.2"
+description = "A brief description of your project"
+
+# Add other necessary fields as needed
+
 
 
 [tool.setuptools.install_requires]
