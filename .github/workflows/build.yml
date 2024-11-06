@@ -76,11 +76,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: python-package
-
+          path: ./artifact
       # Step 4: Install the package
       - name: Install the built package
         run: |
-          pip install dist/*.whl  # Install the .whl artifact from the 'dist/' directory
+
+          pip install ./artifact/*.whl  # Install the .whl artifact from the 'dist/' directory
 
       # Step 5: Run the nonstandardcode.py script
       - name: Run nonstandardcode.py
