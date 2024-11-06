@@ -1,0 +1,46 @@
+name: Conda Environment Setup
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - feat/7/github-actions
+
+jobs:
+  install:
+    name: Install Miniconda
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          installer-url: https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+          activate-environment: mle-dev
+          auto-update-conda: true
+          python-version: 3.10.15
+          environment-file: env.yml
+          auto-activate-base: false
+
+      - name: Verify conda setup
+        run: |
+          conda info --envs
+          conda list
+          conda config --show-sources
+          conda config --show
+
+      - name: Install flake8 and run lint check
+        run: |
+          pip install flake8
+          flake8 .
+
+      - name: Run nonstandardcode.py
+        run: |
+          python nonstandardcode.py

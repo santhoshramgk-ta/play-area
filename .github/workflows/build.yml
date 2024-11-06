@@ -1,0 +1,88 @@
+name: Build Python Package
+
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main # or any branch you want to trigger the build on
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      # Step 1: Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Install the 'tree' CLI tool
+      - name: Install tree CLI
+        run: sudo apt-get install tree
+
+      # Step 3: Display the directory structure before building
+      - name: Display directory tree before build
+        run: tree
+
+      # Step 4: Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.15"
+
+      # Step 5: Install dependencies (including build tools)
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel
+
+      # Step 6: Build the package
+      - name: Build the package
+        run: python -m build  # Ensure 'build' package is installed
+
+      # Step 7: Display the directory structure after building
+      - name: Display directory tree after build
+        run: tree
+
+      # Step 8: Upload the build artifacts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-package
+          path: dist/  # The build artifacts are saved in the 'dist/' directory
+  install_and_run:
+    runs-on: ubuntu-latest
+    needs: build  # This makes sure the 'build' job is completed before this one runs
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Setup Conda environment from the previous assignment
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          installer-url: https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+          activate-environment: mle-dev
+          auto-update-conda: true
+          python-version: 3.10.15
+          environment-file: env.yml
+          auto-activate-base: false
+
+      # Step 3: Download the artifact from the build job
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: python-package
+
+      # Step 4: Install the package
+      - name: Install the built package
+        run: |
+          pip install dist/*.whl  # Install the .whl artifact from the 'dist/' directory
+
+      # Step 5: Run the nonstandardcode.py script
+      - name: Run nonstandardcode.py
+        run: |
+          python -m my_package.nonstandardcode
