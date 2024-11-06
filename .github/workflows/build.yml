@@ -6,7 +6,7 @@ on:
             - main
     push:
         branches:
-            - main # or any branch you want to trigger the build on
+            - feat/9/python-packaging  # or any branch you want to trigger the build on
 
 jobs:
   build:
