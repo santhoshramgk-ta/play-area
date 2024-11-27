@@ -2,7 +2,8 @@
 
     "isort.check": true,
     "black-formatter.args": [
-        "--line-length","79"
+        "--line-length",
+        "79"
     ],
     "isort.args": [
         "--float-to-top"

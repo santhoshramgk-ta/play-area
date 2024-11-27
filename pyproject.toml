@@ -2,18 +2,27 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "MLE_TRAINING"
+version = "v0.2"
+description = "Housing data assignment for MLE_Trainee"
 
+dependencies = [
+    "numpy>=1.21.0",
+    "pandas>=1.3.0",
+    "scikit-learn>=0.24.0",
+    "scipy>=1.6.0",
+    "matplotlib>=3.4.0",
+    "six>=1.16.0"
+]
 
-[tool.setuptools.install_requires]
-numpy = ">=1.21.0"
-pandas = ">=1.3.0"
-scikit-learn = ">=0.24.0"
-scipy = ">=1.6.0"
-matplotlib = ">=3.4.0"
-six = ">=1.16.0"
+[tool.setuptools]
+include-package-data = true
+
 
 [tool.black]
 line-length=79
+experimental-string-processing = true
 
 [tool.isort]
 profile="black"

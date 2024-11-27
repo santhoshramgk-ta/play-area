@@ -2,4 +2,13 @@
 __pycache__/
 *.csv
 datasets/
-
+.vscode/
+*.egg-info/
+data/
+models/
+results/
+_build/
+build/
+logs/
+mlruns/
+*.zip
