@@ -5,10 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "MLE_TRAINING"
 version = "v0.2"
-description = "A brief description of your project"
-
-# Add other necessary fields as needed
-
+description = "Housing data assignment for MLE_Trainee"
 
 dependencies = [
     "numpy>=1.21.0",
@@ -25,6 +22,7 @@ include-package-data = true
 
 [tool.black]
 line-length=79
+experimental-string-processing = true
 
 [tool.isort]
 profile="black"
