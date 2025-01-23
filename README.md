@@ -48,4 +48,4 @@ python scripts/train.py --dataset_folder ./data --model_output_folder ./models -
 
 python scripts/score.py --model_folder ./models --dataset_folder ./data --output_folder ./results --log-level INFO --log-path ./logs/score.log
 
-# adding a PR for Issue 1
+# Testing PR THC
