@@ -44,6 +44,10 @@ To run the main script, use:
 bash
 python scripts/ingest_data.py --data_output_folder ./data --log-level INFO --log-path ./logs/ingest_data.log
 
+
+
+X in progress
+
 python scripts/train.py --dataset_folder ./data --model_output_folder ./models --log-level INFO --log-path ./logs/train.log
 
 python scripts/score.py --model_folder ./models --dataset_folder ./data --output_folder ./results --log-level INFO --log-path ./logs/score.log
