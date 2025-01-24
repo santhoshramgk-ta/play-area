@@ -10,5 +10,6 @@ results/
 _build/
 build/
 logs/
+node_modules/
 mlruns/
 *.zip
