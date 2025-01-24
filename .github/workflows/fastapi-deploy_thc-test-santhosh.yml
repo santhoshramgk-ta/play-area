@@ -8,6 +8,8 @@ on:
   push:
     branches:
       - fastapi-deploy
+    paths-ignore:
+      - frontend-ts/**
   workflow_dispatch:
 
 jobs:
