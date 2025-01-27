@@ -16,9 +16,8 @@ jobs:
         with:
           script: |
             const columnName = "In review"; // Name of the column where the issue should be moved
-            const projectNumber = 8; // Replace with your project number
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
+            const projectId = 8; // Replace with the project number from your URL
+            const user = "santhoshramgk-ta"; // Replace with your GitHub username
 
             // Check if the PR body references an issue (e.g., Fixes #123)
             const issueNumber = context.payload.pull_request.body.match(/#(\d+)/)?.[1];
@@ -30,15 +29,14 @@ jobs:
 
             console.log(`Found linked issue: #${issueNumber}`);
 
-            // Get project columns for the repository
-            const { data: projects } = await github.rest.projects.listForRepo({
-              owner,
-              repo,
+            // Get the project by its ID (user-level project)
+            const { data: projects } = await github.rest.projects.listForUser({
+              username: user,
             });
 
-            const project = projects.find((p) => p.number === projectNumber);
+            const project = projects.find((p) => p.id === projectId);
             if (!project) {
-              throw new Error(`Project number ${projectNumber} not found.`);
+              throw new Error(`Project with ID ${projectId} not found.`);
             }
 
             console.log(`Found project: ${project.name}`);
