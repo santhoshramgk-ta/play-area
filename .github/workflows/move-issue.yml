@@ -1,0 +1,73 @@
+name: Move Linked Issue to In Review on PR Creation
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  move-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Move linked issue to In Review
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const columnName = "In review"; // Name of the column where the issue should be moved
+            const projectNumber = 8; // Replace with your project number
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Check if the PR body references an issue (e.g., Fixes #123)
+            const issueNumber = context.payload.pull_request.body.match(/#(\d+)/)?.[1];
+
+            if (!issueNumber) {
+              console.log("No linked issue found in the PR body.");
+              return;
+            }
+
+            console.log(`Found linked issue: #${issueNumber}`);
+
+            // Get project columns for the repository
+            const { data: projects } = await github.rest.projects.listForRepo({
+              owner,
+              repo,
+            });
+
+            const project = projects.find((p) => p.number === projectNumber);
+            if (!project) {
+              throw new Error(`Project number ${projectNumber} not found.`);
+            }
+
+            console.log(`Found project: ${project.name}`);
+
+            // Get columns for the project
+            const { data: columns } = await github.rest.projects.listColumns({
+              project_id: project.id,
+            });
+
+            const targetColumn = columns.find((col) => col.name === columnName);
+            if (!targetColumn) {
+              throw new Error(`Column "${columnName}" not found in project.`);
+            }
+
+            console.log(`Found target column: ${targetColumn.name}`);
+
+            // Move the linked issue to the target column
+            const { data: cards } = await github.rest.projects.listCards({
+              column_id: targetColumn.id,
+            });
+
+            const card = cards.find((card) => card.content_url?.includes(`/issues/${issueNumber}`));
+            if (card) {
+              console.log("Issue is already in the target column.");
+            } else {
+              await github.rest.projects.createCard({
+                column_id: targetColumn.id,
+                content_id: issueNumber,
+                content_type: "Issue",
+              });
+              console.log(`Moved issue #${issueNumber} to column "${columnName}".`);
+            }
